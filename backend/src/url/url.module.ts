@@ -1,12 +1,19 @@
-// src/url/url.module.ts
 import { Module } from '@nestjs/common';
-import { UrlService } from './url.service';
-import { UrlController } from './url.controller';
-import { DrizzleModule } from '../drizzle/drizzle.module';
-import { RedisModule } from '../redis/redis.module';
+import { UrlController } from '../url/url.controller';
+import { UrlService } from '../url/url.service';
+import { DrizzleService } from '../drizzle/drizzle.service';
+import { DRIZZLE_TOKEN } from '../drizzle/drizzle.constants';
 
 @Module({
   controllers: [UrlController],
-  providers: [UrlService],
+  providers: [
+    UrlService,
+    DrizzleService,
+    {
+      provide: DRIZZLE_TOKEN,
+      useFactory: (drizzleService: DrizzleService) => drizzleService.db,
+      inject: [DrizzleService],
+    },
+  ],
 })
 export class UrlModule {}

@@ -1,5 +1,7 @@
 #!/bin/sh
 
+set -e
+
 echo "⏳ Aguardando o MySQL subir..."
 until nc -z -v -w30 mysql 3306
 do
@@ -7,8 +9,11 @@ do
   sleep 2
 done
 
-echo "🚀 Executando drizzle push..."
-npx drizzle-kit push:mysql --config=drizzle.config.ts
+echo "🚀 Gerando migrations..."
+npx drizzle-kit generate
+
+echo "🚀 Aplicando migrations..."
+npx drizzle-kit migrate
 
 echo "🚀 Iniciando o NestJS..."
 npm run start:dev

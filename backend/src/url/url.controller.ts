@@ -1,6 +1,15 @@
-import { Controller, Get, Post, Body, Param } from '@nestjs/common';
-import { CreateUrlDto } from './dto/create-url.dto';
-import { UrlService } from './url.service';
+// src/url/controllers/url.controller.ts
+import {
+  Controller,
+  Post,
+  Body,
+  Get,
+  Param,
+  HttpException,
+  HttpStatus,
+} from '@nestjs/common';
+import { UrlService } from '../url/url.service';
+import { CreateUrlDto } from '../url/dto/create-url.dto';
 
 @Controller('urls')
 export class UrlController {
@@ -13,7 +22,11 @@ export class UrlController {
 
   @Get(':code')
   async resolve(@Param('code') code: string) {
-    return this.urlService.resolve(code);
+    const { originalUrl } = await this.urlService.resolve(code);
+    if (!originalUrl) {
+      throw new HttpException('URL not found', HttpStatus.NOT_FOUND);
+    }
+    return { originalUrl };
   }
 
   @Get()

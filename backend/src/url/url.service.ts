@@ -1,33 +1,47 @@
-import { Injectable } from '@nestjs/common';
-
-// Define CreateUrlDto if not already defined elsewhere
-export interface CreateUrlDto {
-  originalUrl: string;
-}
+import { Injectable, Inject } from '@nestjs/common';
+import { MySql2Database } from 'drizzle-orm/mysql2';
+import { eq } from 'drizzle-orm';
+import * as schema from '../drizzle/schema';
+import { CreateUrlDto } from '../url/dto/create-url.dto';
+import { DRIZZLE_TOKEN } from '../drizzle/drizzle.constants';
 
 @Injectable()
 export class UrlService {
-  private urls: Record<string, string> = {};
+  constructor(@Inject(DRIZZLE_TOKEN) private readonly db: MySql2Database) {}
 
-  create(createUrlDto: CreateUrlDto): { shortCode: string } {
+  async create(createUrlDto: CreateUrlDto): Promise<{ shortCode: string }> {
     const shortCode = Math.random().toString(36).substring(2, 8);
-    this.urls[shortCode] = createUrlDto.originalUrl;
+
+    await this.db.insert(schema.urls).values({
+      shortCode,
+      originalUrl: createUrlDto.originalUrl,
+      expiresAt: undefined, // or set a Date if required
+    });
+
     return { shortCode };
   }
 
-  resolve(code: string): { originalUrl: string | null } {
-    const originalUrl = this.urls[code] || null;
-    return { originalUrl };
+  async resolve(code: string): Promise<{ originalUrl: string | null }> {
+    const result = await this.db
+      .select()
+      .from(schema.urls)
+      .where(eq(schema.urls.shortCode, code))
+      .limit(1);
+
+    return {
+      originalUrl: result[0]?.originalUrl ?? null,
+    };
   }
 
-  findAll(): any[] {
-    return Object.entries(this.urls).map(([shortCode, originalUrl]) => ({
-      id: 'mock-id',
-      originalUrl,
-      shortCode,
-      createdAt: new Date(),
-      expiresAt: new Date(),
-      accessCount: 0,
+  async findAll(): Promise<any[]> {
+    const results = await this.db.select().from(schema.urls);
+    return results.map((record) => ({
+      id: record.shortCode,
+      originalUrl: record.originalUrl,
+      shortCode: record.shortCode,
+      createdAt: record.createdAt,
+      expiresAt: record.expiresAt,
+      accessCount: record.accessCount || 0,
     }));
   }
 }
