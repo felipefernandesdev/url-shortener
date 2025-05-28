@@ -1,27 +1,27 @@
-# URL Shortener
+### Estrutura Completa do Projeto
 
-Este projeto é um encurtador de URLs, permitindo transformar links longos em versões curtas e fáceis de compartilhar. Ele oferece uma interface simples para criar, gerenciar e redirecionar URLs encurtadas, facilitando o rastreamento de acessos e o compartilhamento em redes sociais ou outros meios digitais.
+### Backend NestJs (`./ackend`)
+**Rotas principais:**
+- `POST /urls`
+- `GET /urls/:code`
+- `GET /urls`
+---
 
-## Funcionalidades
+### Frontend Next.js (`./frontend`)
 
-- Criação de URLs curtas a partir de links longos.
-- Redirecionamento automático para o link original ao acessar a URL curta.
-- Possibilidade de monitorar estatísticas de acesso (dependendo da implementação).
-- Interface amigável para usuários e administradores.
+```
+#### Como rodar com Docker Compose
 
-## Tecnologias Utilizadas
+Para iniciar o projeto com Docker Compose, execute:
 
-- Linguagem de programação principal (ex: Node.js, Python, Go, etc.)
-- Frameworks e bibliotecas relevantes.
-- Banco de dados para armazenamento das URLs.
+```bash
+docker-compose up --build
+```
 
-## Como usar
+Isso irá subir tanto o backend quanto o frontend em containers separados.
 
-1. Clone o repositório.
-2. Instale as dependências.
-3. Execute o projeto localmente.
-4. Acesse a interface web ou utilize a API para criar URLs curtas.
+Acesse:
+- Frontend: http://localhost:3000
+- Backend: http://localhost:3001
 
-## Contribuição
-
-Contribuições são bem-vindas! Sinta-se à vontade para abrir issues ou enviar pull requests.
+---
