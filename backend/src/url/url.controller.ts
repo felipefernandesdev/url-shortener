@@ -7,9 +7,11 @@ import {
   Param,
   HttpException,
   HttpStatus,
+  Put,
 } from '@nestjs/common';
 import { UrlService } from '../url/url.service';
 import { CreateUrlDto } from '../url/dto/create-url.dto';
+import { UpdateUrlDto } from './dto/update-url.dto';
 
 @Controller('urls')
 export class UrlController {
@@ -32,5 +34,13 @@ export class UrlController {
   @Get()
   async findAll() {
     return this.urlService.findAll();
+  }
+
+  @Put(':code')
+  async update(
+    @Param('code') code: string,
+    @Body() updateUrlDto: UpdateUrlDto,
+  ): Promise<{ message: string }> {
+    return this.urlService.update(code, updateUrlDto);
   }
 }

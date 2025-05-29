@@ -90,35 +90,38 @@ export default function UrlShortenerPage() {
         ) : (
           <div className="space-y-4">
             {urls.map((url) => (
-              <div
-                key={url.shortCode}
-                className="bg-white shadow-md rounded-lg p-4 border border-gray-200 hover:shadow-lg transition-shadow"
-              >
-                <div className="flex justify-between items-start">
-                  <div className="space-y-1">
-                    <a
-                      href={url.originalUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-blue-600 hover:underline break-all"
-                    >
-                      {url.originalUrl}
-                    </a>
-                    <p className="text-sm text-gray-500">
-                      Criado em: {new Date(url.createdAt).toLocaleString()}
-                    </p>
-                  </div>
-                  <div className="ml-4">
-                    <Link
-                      href={`/redirect/${url.shortCode}`}
-                      className="inline-block bg-indigo-100 text-indigo-700 font-medium px-3 py-1 rounded-full text-sm hover:bg-indigo-200 transition-colors"
-                    >
-                      {url.shortCode}
-                    </Link>
-                  </div>
-                </div>
-              </div>
-            ))}
+  <div
+    key={url.shortCode}
+    className="bg-white shadow-md rounded-lg p-4 border border-gray-200 hover:shadow-lg transition-shadow"
+  >
+    <div className="flex justify-between items-start">
+      <div className="space-y-1">
+        <a
+          href={url.originalUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-blue-600 hover:underline break-all"
+        >
+          {url.originalUrl}
+        </a>
+        <p className="text-sm text-gray-500">
+          Criado em: {new Date(url.createdAt).toLocaleString()}
+        </p>
+        <p className="text-sm text-gray-600">
+          Acessos: <span className="font-semibold">{url.accessCount}</span>
+        </p>
+      </div>
+      <div className="ml-4">
+        <Link
+          href={`/redirect/${url.shortCode}`}
+          className="inline-block bg-indigo-100 text-indigo-700 font-medium px-3 py-1 rounded-full text-sm hover:bg-indigo-200 transition-colors"
+        >
+          {url.shortCode}
+        </Link>
+      </div>
+    </div>
+  </div>
+))}
           </div>
         )}
       </div>

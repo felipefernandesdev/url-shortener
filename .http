@@ -8,11 +8,19 @@ Content-Type: application/json
 
 ###
 
-GET http://localhost:3001/urls/z8e3p9
+GET http://localhost:3001/urls/t1vsbl
 Content-Type: application/json
 
 ###
 
 GET http://localhost:3001/urls/
 Content-Type: application/json
+###
+
+PUT http://localhost:3001/urls/67op0z
+Content-Type: application/json
+
+{
+  "originalUrl": "https://www.centralfmquixada.com.br/noticia/-justica-por-nathany-julgamento-comeca-hoje-2805"
+}
 ###

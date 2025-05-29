@@ -4,6 +4,7 @@ import { eq } from 'drizzle-orm';
 import * as schema from '../drizzle/schema';
 import { CreateUrlDto } from '../url/dto/create-url.dto';
 import { DRIZZLE_TOKEN } from '../drizzle/drizzle.constants';
+import { UpdateUrlDto } from './dto/update-url.dto';
 
 @Injectable()
 export class UrlService {
@@ -15,7 +16,7 @@ export class UrlService {
     await this.db.insert(schema.urls).values({
       shortCode,
       originalUrl: createUrlDto.originalUrl,
-      expiresAt: undefined, // or set a Date if required
+      expiresAt: undefined,
     });
 
     return { shortCode };
@@ -28,9 +29,13 @@ export class UrlService {
       .where(eq(schema.urls.shortCode, code))
       .limit(1);
 
-    return {
-      originalUrl: result[0]?.originalUrl ?? null,
-    };
+    const originalUrl = result[0]?.originalUrl ?? null;
+    await this.db
+      .update(schema.urls)
+      .set({ accessCount: (result[0]?.accessCount || 0) + 1 })
+      .where(eq(schema.urls.shortCode, code));
+
+    return { originalUrl };
   }
 
   async findAll(): Promise<any[]> {
@@ -43,5 +48,23 @@ export class UrlService {
       expiresAt: record.expiresAt,
       accessCount: record.accessCount || 0,
     }));
+  }
+
+  async update(
+    code: string,
+    updateUrlDto: UpdateUrlDto,
+  ): Promise<{ result: any; message: string }> {
+    const result = await this.db
+      .update(schema.urls)
+      .set({
+        originalUrl: updateUrlDto.originalUrl,
+        expiresAt: updateUrlDto.expiresAt,
+      })
+      .where(eq(schema.urls.shortCode, code));
+
+    return {
+      result,
+      message: `URL with code "${code}" has been updated successfully.`,
+    };
   }
 }
