@@ -9,6 +9,8 @@ type UrlEntry = {
   originalUrl: string;
   shortCode: string;
   createdAt: string;
+  accessCount: number;
+  expiresAt?: string | null;
 };
 
 export default function UrlShortenerPage() {
