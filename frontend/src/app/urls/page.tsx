@@ -45,7 +45,7 @@ export default function UrlShortenerPage() {
       });
       setUrls([res.data, ...urls]);
       setOriginalUrl("");
-    } catch (err) {
+    } catch {
       setError("Erro ao encurtar URL. Tente novamente.");
     } finally {
       setLoading(false);
